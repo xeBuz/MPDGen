@@ -11,13 +11,17 @@ from mpd import (MPDClient, CommandError)
 
 class MPDGen(Daemon):
 
-    ' No se como mejorar esto'
-    mpd_library = []
+    ' For MPD connection '
     client = MPDClient()
-
+    ' Storage all the artist in memory for optimize querys'
+    mpd_library = []
+    ' Count of song for append to playlist '
     song_count = 10
+    ' Current playin song '
     current_song = ''
+    ' Last song played '
     last_song = ''
+
 
     def __init__(self):
         """  Initilize the class """
@@ -28,6 +32,7 @@ class MPDGen(Daemon):
     def mpd_connect(self, client):
         """ Connect w/MPD Server """
         #ToDo- Tomar Host y Port de un archivo
+        # load_conf()
         mpd_host = 'localhost'
         mpd_port = '6600'
         mod_connection = {'host': mpd_host, 'port': mpd_port}
@@ -48,9 +53,12 @@ class MPDGen(Daemon):
         pass
 
     def get_current_song(self):
+        """ Get the current song playing in the server, and save it """        
         self.current_song = self.client.currentsong()
 
     def get_recommended(self):
+        """ Get the similar artist from Last.fm """
+        """ Storage in a array and them validate if exists in the server """
         recommended_artists = []
         current_artist = AudioScrobblerQuery(artist=self.current_song['artist'])
         # En base a todos los artistas similares, me fijo cuales tengo en el
@@ -60,25 +68,30 @@ class MPDGen(Daemon):
                 recommended_artists.append(artist.name)
                 if len(recommended_artists) == self.song_count:
                     exit
-
+        ' Return similar artists in the server'
         return recommended_artists
 
+
+
     def get_similar(self, recommended_artists):
-
-
         while len(recommended_songs) < COUNT_SONGS:
             artist = random.choice(recommended_artists)
             recommended_songs.append(random.choice(client.search('artist', artist)))
-        for i in (len(recommended_songs))
+        for i in (len(recommended_songs)):
+            
+            
+    def append_playlist(self, recommended_artists):if len
+        recommended_songs.append(random.choice(client.search('artist', artist)))
+            
+        
+
 
     def run(self):
+        """ Execute the application """
         self.get_current_song()
         if self.current_song <> self.last_song:
             recommended_artists = self.get_recommended()
-
-
-
-
+            append_playlist(recommended_artists)            
 
 
 
